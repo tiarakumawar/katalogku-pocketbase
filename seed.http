@@ -1,0 +1,90 @@
+### Isi data produk awal (opsional, pengganti input manual di dashboard)
+### Langsung ke product-service (port 8091), login sebagai superuser.
+
+@pbUrl = http://192.168.1.104:8091
+@suToken = {{su.response.body.$.token}}
+
+### 0. Login superuser
+# @name su
+POST {{pbUrl}}/api/collections/_superusers/auth-with-password
+Content-Type: application/json
+
+{
+  "identity": "admin@katalogku.id",
+  "password": "GantiPasswordKuat123"
+}
+
+### 1. Kemeja Batik Parang
+POST {{pbUrl}}/api/collections/products/records
+Authorization: {{suToken}}
+Content-Type: application/json
+
+{
+  "title": "Kemeja Batik Parang",
+  "description": "Kemeja batik motif parang, bahan katun.",
+  "category": "fashion",
+  "price": 25,
+  "rating": 4.6,
+  "stock": 40,
+  "thumbnail": "https://picsum.photos/id/21/300"
+}
+
+### 2. Kopi Gayo 250 gr
+POST {{pbUrl}}/api/collections/products/records
+Authorization: {{suToken}}
+Content-Type: application/json
+
+{
+  "title": "Kopi Gayo 250 gr",
+  "description": "Biji kopi arabika Gayo, sangrai medium.",
+  "category": "groceries",
+  "price": 9,
+  "rating": 4.8,
+  "stock": 120,
+  "thumbnail": "https://picsum.photos/id/30/300"
+}
+
+### 3. Teh Hijau Organik
+POST {{pbUrl}}/api/collections/products/records
+Authorization: {{suToken}}
+Content-Type: application/json
+
+{
+  "title": "Teh Hijau Organik",
+  "description": "Teh hijau organik dari kebun Jawa Barat.",
+  "category": "groceries",
+  "price": 6.5,
+  "rating": 4.3,
+  "stock": 80,
+  "thumbnail": "https://picsum.photos/id/312/300"
+}
+
+### 4. Earphone Bluetooth
+POST {{pbUrl}}/api/collections/products/records
+Authorization: {{suToken}}
+Content-Type: application/json
+
+{
+  "title": "Earphone Bluetooth",
+  "description": "Earphone nirkabel, baterai tahan 6 jam.",
+  "category": "electronics",
+  "price": 19,
+  "rating": 4.2,
+  "stock": 60,
+  "thumbnail": "https://picsum.photos/id/96/300"
+}
+
+### 5. Power Bank 10000 mAh
+POST {{pbUrl}}/api/collections/products/records
+Authorization: {{suToken}}
+Content-Type: application/json
+
+{
+  "title": "Power Bank 10000 mAh",
+  "description": "Pengisian cepat 20W, dua port USB.",
+  "category": "electronics",
+  "price": 15,
+  "rating": 4.5,
+  "stock": 50,
+  "thumbnail": "https://picsum.photos/id/160/300"
+}

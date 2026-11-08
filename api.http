@@ -1,0 +1,90 @@
+### Uji API KatalogKu (PocketBase) dengan ekstensi VS Code "REST Client"
+### Klik "Send Request" di atas setiap request, berurutan 1-9.
+
+# Ganti sesuai server: localhost / IP server / URL Cloudflare
+@baseUrl = http://192.168.1.104:8080/api
+# Nilai di bawah diambil otomatis dari hasil request sebelumnya
+@productId = {{list.response.body.$.items[0].id}}
+@token = {{login.response.body.$.token}}
+@userId = {{login.response.body.$.record.id}}
+
+### 1. Cek gateway
+GET {{baseUrl}}/health
+
+### 2. Daftar produk (5 terbaru)
+# @name list
+GET {{baseUrl}}/products?perPage=5&sort=-created
+
+### 3. Cari produk dengan filter PocketBase
+GET {{baseUrl}}/products?filter=title~'kopi'
+
+### 4. Detail produk
+GET {{baseUrl}}/products/{{productId}}
+
+### 5. Daftar akun
+POST {{baseUrl}}/auth/records
+Content-Type: application/json
+
+{
+  "name": "Budi",
+  "email": "budi@itb.ac.id",
+  "password": "rahasia123",
+  "passwordConfirm": "rahasia123"
+}
+
+### 6. Login
+# @name login
+POST {{baseUrl}}/auth/auth-with-password
+Content-Type: application/json
+
+{
+  "identity": "budi@itb.ac.id",
+  "password": "rahasia123"
+}
+
+### 7. Tambah favorit
+POST {{baseUrl}}/favorites
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "user": "{{userId}}",
+  "product_id": "{{productId}}"
+}
+
+### 8. Lihat favorit saya
+# @name favs
+GET {{baseUrl}}/favorites
+Authorization: Bearer {{token}}
+
+### 9. Hapus favorit pertama
+DELETE {{baseUrl}}/favorites/{{favs.response.body.$.items[0].id}}
+Authorization: Bearer {{token}}
+
+### ===== review-service (PocketBase #3) =====
+### 10. Lihat review satu produk (tanpa login)
+# @name reviews
+GET {{baseUrl}}/reviews?filter=product_id='{{productId}}'&sort=-created
+
+### 11. Tulis review (wajib login: token dicek gateway ke account-service)
+POST {{baseUrl}}/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "product_id": "{{productId}}",
+  "user_id": "{{userId}}",
+  "user_name": "Budi",
+  "rating": 5,
+  "comment": "Barangnya bagus, pengiriman cepat."
+}
+
+### 12. Tulis review tanpa token (harus ditolak 401)
+POST {{baseUrl}}/reviews
+Content-Type: application/json
+
+{
+  "product_id": "{{productId}}",
+  "user_id": "{{userId}}",
+  "rating": 1
+}
